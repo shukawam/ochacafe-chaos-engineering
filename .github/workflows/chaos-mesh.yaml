@@ -1,0 +1,50 @@
+name: Chaos Mesh test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Creating kind cluster
+        uses: helm/kind-action@v1.2.0
+
+      - name: Print cluster information
+        run: |
+          kubectl config view
+          kubectl cluster-info
+          kubectl get nodes
+          kubectl get pods -n kube-system
+          helm version
+          kubectl version
+
+      - uses: actions/checkout@v2
+
+      - name: Deploy an application
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/namespace.yaml
+          kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/mysql.yaml
+          kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/wordpress.yaml
+
+      - name: Check pods
+        run: |
+          kubectl -n chaos-testing get pods -n chaos-testing
+          sleep 5
+          kubectl -n ochacafe get pods
+
+      - name: Run chaos mesh action
+        uses: chaos-mesh/chaos-mesh-action@master
+        env:
+          #CFG_FILE: https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/chaos-mesh/pod-kill.yaml
+          CFG_BASE64: a2luZDogUG9kQ2hhb3MNCmFwaVZlcnNpb246IGNoYW9zLW1lc2gub3JnL3YxYWxwaGExDQptZXRhZGF0YToNCiAgbmFtZXNwYWNlOiBvY2hhY2FmZQ0KICBuYW1lOiBwb2Qta2lsbA0Kc3BlYzoNCiAgc2VsZWN0b3I6DQogICAgbmFtZXNwYWNlczoNCiAgICAgIC0gb2NoYWNhZmUNCiAgICBsYWJlbFNlbGVjdG9yczoNCiAgICAgIGFwcDogd29yZHByZXNzDQogIG1vZGU6IG9uZQ0KICBhY3Rpb246IHBvZC1raWxsDQogIGdyYWNlUGVyaW9kOiAw
+          CHAOS_MESH_VERSION: v2.1.4
+
+      - name: Verification
+        run: |
+          echo "Check Kubernetes Self-Healing"
+          kubectl -n ochacafe get po --no-headers | wc -l
