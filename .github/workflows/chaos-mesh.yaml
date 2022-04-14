@@ -38,7 +38,7 @@ jobs:
           kubectl -n ochacafe get pods
 
       - name: Run chaos mesh action
-        uses: chaos-mesh/chaos-mesh-action@master
+        uses: shukawam/chaos-mesh-action@main
         env:
           #CFG_FILE: https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/chaos-mesh/pod-kill.yaml
           CFG_BASE64: a2luZDogUG9kQ2hhb3MNCmFwaVZlcnNpb246IGNoYW9zLW1lc2gub3JnL3YxYWxwaGExDQptZXRhZGF0YToNCiAgbmFtZXNwYWNlOiBvY2hhY2FmZQ0KICBuYW1lOiBwb2Qta2lsbA0Kc3BlYzoNCiAgc2VsZWN0b3I6DQogICAgbmFtZXNwYWNlczoNCiAgICAgIC0gb2NoYWNhZmUNCiAgICBsYWJlbFNlbGVjdG9yczoNCiAgICAgIGFwcDogd29yZHByZXNzDQogIG1vZGU6IG9uZQ0KICBhY3Rpb246IHBvZC1raWxsDQogIGdyYWNlUGVyaW9kOiAw
