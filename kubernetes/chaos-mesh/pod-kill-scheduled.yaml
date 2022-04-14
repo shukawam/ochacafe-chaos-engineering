@@ -1,0 +1,17 @@
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: ochacafe
+  name: pod-kill
+spec:
+  schedule: 59 21 * * *
+  concurrencyPolicy: Forbid
+  historyLimit: 1
+  type: PodChaos
+  podChaos:
+    selector:
+      namespaces:
+        - ochacafe
+    mode: all
+    action: pod-kill
+    gracePeriod: 0

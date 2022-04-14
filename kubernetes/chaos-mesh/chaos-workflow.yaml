@@ -1,0 +1,48 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Workflow 
+metadata:
+  namespace: ochacafe
+  name: chaos-workflow
+spec:
+  entry: entry
+  templates:
+    - name: entry
+      templateType: Serial
+      deadline: 10m
+      children:
+        - chaos-workflow
+    - name: chaos-workflow
+      templateType: Serial
+      deadline: 10m
+      children:
+        - pod-kill
+        - network-latency
+    - name: pod-kill
+      templateType: PodChaos
+      deadline: 5m
+      podChaos:
+        selector:
+          namespaces:
+            - ochacafe
+          labelSelectors:
+            app: wordpress
+        mode: one
+        action: pod-kill
+        gracePeriod: 0
+    - name: network-latency
+      templateType: NetworkChaos
+      deadline: 5m
+      networkChaos:
+        selector:
+          namespaces:
+            - ochacafe
+          labelSelectors:
+            app: wordpress
+            tier: mysql
+        mode: all
+        action: delay
+        delay:
+          latency: 2s
+          correlation: '0'
+          jitter: 0ms
+        direction: to

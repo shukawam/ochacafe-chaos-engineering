@@ -1,0 +1,14 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: nw-delay
+spec:
+  action: delay
+  mode: all
+  selector:
+    namespaces:
+      - chaos-engineering
+    labelSelectors:
+      "tier": "mysql"
+  delay:
+    latency: "200ms"
