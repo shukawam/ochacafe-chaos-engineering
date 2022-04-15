@@ -15,6 +15,22 @@ spec:
     app: wordpress
     tier: frontend
   type: ClusterIP
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: wp-pv-claim
+#   namespace: ochacafe
+#   labels:
+#     app: wordpress
+#     tier: frontend
+# spec:
+#   storageClassName: "oci-bv" # for OCI
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 50Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -51,3 +67,10 @@ spec:
           ports:
             - containerPort: 80
               name: wordpress
+      #     volumeMounts:
+      #       - name: wordpress-persistent-storage
+      #         mountPath: /var/www/html
+      # volumes:
+      #   - name: wordpress-persistent-storage
+      #     persistentVolumeClaim:
+      #       claimName: wp-pv-claim

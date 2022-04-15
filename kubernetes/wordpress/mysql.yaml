@@ -5,13 +5,29 @@ metadata:
   namespace: ochacafe
   labels:
     app: wordpress
-    tier: mysql
+    tier: database
 spec:
   ports:
     - port: 3306
   selector:
     app: wordpress
-    tier: mysql
+    tier: database
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: mysql-pv-claim
+#   namespace: ochacafe
+#   labels:
+#     app: wordpress
+#     tier: mysql
+# spec:
+#   storageClassName: "oci-bv" # for OCI
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 50Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -20,19 +36,19 @@ metadata:
   namespace: ochacafe
   labels:
     app: wordpress
-    tier: mysql
+    tier: database
 spec:
   selector:
     matchLabels:
       app: wordpress
-      tier: mysql
+      tier: database
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: wordpress
-        tier: mysql
+        tier: database
     spec:
       containers:
         - image: mysql:5.7
@@ -49,3 +65,10 @@ spec:
           ports:
             - containerPort: 3306
               name: mysql
+      #     volumeMounts:
+      #       - name: mysql-persistent-storage
+      #         mountPath: /var/lib/mysql
+      # volumes:
+      #   - name: mysql-persistent-storage
+      #     persistentVolumeClaim:
+      #       claimName: mysql-pv-claim
