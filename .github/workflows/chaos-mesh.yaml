@@ -29,16 +29,18 @@ jobs:
         run: |
           kubectl create ns ochacafe
           kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/mysql.yaml
+          sleep 30
           kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/wordpress.yaml
+          sleep 30
 
       - name: Check pods_1
         id: expected
         run: |
           sleep 10
-          kubectl -n chaos-testing get pods -n chaos-testing
+          kubectl -n chaos-testing get pods
           sleep 10
           kubectl -n ochacafe get pods
-          ::set-output name=expected_pod_num=::`kubectl -n ochacafe get pods --field-selector=status.phase=Running --no-headers | wc -l`
+          ::set-output name=EXPECTED_POD_NUM::`kubectl -n ochacafe get pods --field-selector=status.phase=Running --no-headers | wc -l`
 
       - name: Run chaos mesh action
         uses: shukawam/chaos-mesh-action@main
@@ -52,10 +54,10 @@ jobs:
         run: |
           sleep 10
           echo "Check Kubernetes Self-Healing"
-          ::set-outputactual_pod_num=`kubectl -n ochacafe get pods --field-selector=status.phase=Running --no-headers | wc -l`
+          ::set-output name=ACTUAL_POD_NUM::`kubectl -n ochacafe get pods --field-selector=status.phase=Running --no-headers | wc -l`
 
       - name: Handling
-        if: ${{steps.expected.outputs.expected_pod_num}} == ${{steps.actual.outputs.actual_pod_num}}
+        if: ${{steps.expected.outputs.EXPECTED_POD_NUM}} == ${{steps.actual.outputs.ACTUAL_POD_NUM}}
         run: |
           echo "Failed Chaos Experiment."
           exit 1
