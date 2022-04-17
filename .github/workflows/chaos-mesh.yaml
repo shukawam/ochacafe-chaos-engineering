@@ -27,10 +27,11 @@ jobs:
 
       - name: Deploy an application
         run: |
+          kuebctl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/mysql-test-secret.yaml
           kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/mysql.yaml
-          sleep 30
+          sleep 10
           kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/wordpress.yaml
-          sleep 30
+          sleep 10
           kubectl get po -o name | head -n 1 | xargs kubectl describe
 
       - name: Check pods_1
@@ -41,7 +42,6 @@ jobs:
           sleep 10
           kubectl get pods
           echo "::set-output name=EXPECTED_POD_NUM::`kubectl get pods --field-selector=status.phase=Running --no-headers | wc -l`"
-          kubectl get po -o name | head -n 1 | xargs kubectl describe
 
       - name: Run chaos mesh action
         uses: shukawam/chaos-mesh-action@main
