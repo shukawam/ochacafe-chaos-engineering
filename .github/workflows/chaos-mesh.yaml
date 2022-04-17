@@ -42,6 +42,7 @@ jobs:
           sleep 10
           kubectl get pods
           echo "::set-output name=EXPECTED_POD_NUM::`kubectl get pods --field-selector=status.phase=Running --no-headers | wc -l`"
+          echo ${{steps.expected.outputs.EXPECTED_POD_NUM}}
 
       - name: Run chaos mesh action
         uses: shukawam/chaos-mesh-action@main
@@ -55,6 +56,7 @@ jobs:
           sleep 10
           echo "Check Kubernetes Self-Healing"
           echo "::set-output name=ACTUAL_POD_NUM::`kubectl get pods --field-selector=status.phase=Running --no-headers | wc -l`"
+          echo {{steps.actual.outputs.ACTUAL_POD_NUM}}
 
       - name: Handling
         if: ${{steps.expected.outputs.EXPECTED_POD_NUM}} == ${{steps.actual.outputs.ACTUAL_POD_NUM}}
