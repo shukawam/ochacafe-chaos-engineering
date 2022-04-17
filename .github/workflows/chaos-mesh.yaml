@@ -14,14 +14,14 @@ jobs:
       - name: Creating kind cluster
         uses: helm/kind-action@v1.2.0
 
-      # - name: Print cluster information
-      #   run: |
-      #     kubectl config view
-      #     kubectl cluster-info
-      #     kubectl get nodes
-      #     kubectl get pods -n kube-system
-      #     helm version
-      #     kubectl version
+      - name: Print cluster information
+        run: |
+          kubectl config view
+          kubectl cluster-info
+          kubectl get nodes
+          kubectl get pods -n kube-system
+          helm version
+          kubectl version
 
       - uses: actions/checkout@v2
 
@@ -63,7 +63,7 @@ jobs:
       - name: Handling
         if: ${{ steps.expected.outputs.EXPECTED_POD_NUM != steps.actual.outputs.ACTUAL_POD_NUM }}
         run: |
-          echo ${{ steps.expected.outputs.EXPECTED_POD_NUM }}
-          echo ${{ steps.actual.outputs.ACTUAL_POD_NUM }}
           echo "Failed Chaos Experiment."
+          echo "expected: ${{ steps.expected.outputs.EXPECTED_POD_NUM }}"
+          echo "actual: ${{ steps.actual.outputs.ACTUAL_POD_NUM }}"
           exit 1
