@@ -1,7 +1,6 @@
 kind: PodChaos
 apiVersion: chaos-mesh.org/v1alpha1
 metadata:
-  namespace: ochacafe
   name: pod-kill
 spec:
   selector:

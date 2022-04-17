@@ -31,6 +31,7 @@ jobs:
           sleep 30
           kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/wordpress.yaml
           sleep 30
+          kubectl get po -o name | head -n 1 | xargs kubectl describe
 
       - name: Check pods_1
         id: expected
@@ -40,7 +41,7 @@ jobs:
           sleep 10
           kubectl get pods
           echo "::set-output name=EXPECTED_POD_NUM::`kubectl get pods --field-selector=status.phase=Running --no-headers | wc -l`"
-          echo ${{steps.expected.outputs.EXPECTED_POD_NUM}}
+          kubectl get po -o name | head -n 1 | xargs kubectl describe
 
       - name: Run chaos mesh action
         uses: shukawam/chaos-mesh-action@main
@@ -54,7 +55,6 @@ jobs:
           sleep 10
           echo "Check Kubernetes Self-Healing"
           echo "::set-output name=ACTUAL_POD_NUM::`kubectl get pods --field-selector=status.phase=Running --no-headers | wc -l`"
-          echo ${{steps.actual.outputs.ACTUAL_POD_NUM}}
 
       - name: Handling
         if: ${{steps.expected.outputs.EXPECTED_POD_NUM}} == ${{steps.actual.outputs.ACTUAL_POD_NUM}}
