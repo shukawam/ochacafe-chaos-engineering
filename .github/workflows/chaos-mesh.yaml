@@ -61,7 +61,7 @@ jobs:
           echo "::set-output name=ACTUAL_POD_NUM::${running_pod_num}"
 
       - name: Handling
-        if: ${{ steps.expected.outputs.EXPECTED_POD_NUM }} != ${{ steps.actual.outputs.ACTUAL_POD_NUM }}
+        if: ${{ steps.expected.outputs.EXPECTED_POD_NUM != steps.actual.outputs.ACTUAL_POD_NUM }}
         run: |
           echo ${{ steps.expected.outputs.EXPECTED_POD_NUM }}
           echo ${{ steps.actual.outputs.ACTUAL_POD_NUM }}
