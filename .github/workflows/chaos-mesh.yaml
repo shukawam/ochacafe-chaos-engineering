@@ -27,7 +27,7 @@ jobs:
 
       - name: Deploy an application
         run: |
-          kuebctl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/mysql-test-secret.yaml
+          kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/mysql-test-secret.yaml
           kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/mysql.yaml
           sleep 10
           kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/wordpress.yaml
