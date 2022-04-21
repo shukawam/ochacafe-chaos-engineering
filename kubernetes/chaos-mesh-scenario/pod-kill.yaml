@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     namespaces:
-      - ochacafe
+      - default
     labelSelectors:
       app: wordpress
   mode: one
