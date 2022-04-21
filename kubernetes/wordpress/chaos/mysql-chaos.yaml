@@ -15,15 +15,17 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wordpress-mysql
+  name: wordpress-mysql-chaos
   labels:
     app: wordpress
     tier: database
+    chaos: absolutely
 spec:
   selector:
     matchLabels:
       app: wordpress
       tier: database
+      chaos: absolutely
   strategy:
     type: Recreate
   template:
@@ -31,8 +33,16 @@ spec:
       labels:
         app: wordpress
         tier: database
+        chaos: absolutely
     spec:
       containers:
+        - image: docker.io/shopify/toxiproxy:2.1.4
+          name: toxiproxy
+          ports:
+            - containerPort: 3306
+              name: mysql
+            - containerPort: 8474
+              name: toxiproxy-api
         - image: mysql:5.7
           name: mysql
           args:
@@ -44,6 +54,5 @@ spec:
                 secretKeyRef:
                   name: mysql
                   key: password
-          ports:
-            - containerPort: 3306
-              name: mysql
+            - name: MYSQL_TCP_PORT
+              value: "3316"
