@@ -2,11 +2,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: wordpress-ingress
+  namespace: chaos
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: wordpress.shukawam.cf
+    - host: <your-host>
       http:
         paths:
           - backend:
