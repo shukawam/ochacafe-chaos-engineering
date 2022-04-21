@@ -48,8 +48,8 @@ jobs:
       - name: Run chaos mesh action
         uses: shukawam/chaos-mesh-action@main
         env:
-          CFG_FILE: https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/chaos-mesh/pod-kill.yaml
-          CHAOS_MESH_VERSION: v2.1.4
+          CFG_FILE: https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/chaos-mesh-scenario/pod-kill.yaml
+          CHAOS_MESH_VERSION: v2.1.5
 
       - name: Check pods_2
         id: actual
