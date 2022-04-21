@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: k6-dummy-client
+  namespace: ochacafe
+spec:
+  completions: 1
+  ttlSecondsAfterFinished: 10
+  template:
+    spec:
+      containers:
+        - image: grafana/k6
+          name: k6-dummy-client
+          args:
+            - "run"
+            - "--out"
+            - "influxdb=http://influxdb.shukawam.cf/ochacafe"
+            - "--vus"
+            - "10"
+            - "--duration"
+            - "15m"
+            - "script.js"
+          volumeMounts:
+            - name: k6-script
+              mountPath: /home/k6
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: ocir-secret
+      volumes:
+        - name: k6-script
+          configMap:
+            name: k6-configmap
+status: {}
