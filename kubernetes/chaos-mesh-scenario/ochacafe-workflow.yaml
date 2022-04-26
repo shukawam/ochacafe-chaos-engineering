@@ -90,7 +90,7 @@ spec:
             - '-H'
             - 'Content-Type: application/json'
             - >-
-              https://hooks.slack.com/services/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
+              <webhook-url>
     - name: parralel-task
       templateType: Parallel
       deadline: 2m
