@@ -88,6 +88,37 @@ spec:
           - name: k6-script
             configMap:
               name: k6-configmap
+    - name: send-slack-message
+      templateType: Task
+      task:
+        container:
+          name: send-slack-message-rendered-http-request
+          image: curlimages/curl:7.78.0
+          command:
+            - curl
+            - '-i'
+            - '-s'
+            - '-X'
+            - POST
+            - '-d'
+            - '{"text": "Experiment has finished. see: http://grafana.shukawam.cf/d/3qwLbhU7k/chaos-dashboard?orgId=1&refresh=5s&from=now-5m&to=now"}'
+            - '-H'
+            - 'Content-Type: application/json'
+            - '-H'
+            - 'Authorization: Bearer $(WEBHOOK_TOKEN)'
+            - >-
+              $(WEBHOOK_URL)
+          env:
+            - name: WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  key: slack-credential
+                  name: webhook-url
+            - name: WEBHOOK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: slack-credential
+                  name: token
     - name: parralel-task
       templateType: Parallel
       deadline: 3m
@@ -101,3 +132,4 @@ spec:
       children:
         - k6-load-test-in-steady-state
         - parralel-task
+        - send-slack-message

@@ -1,7 +1,7 @@
 apiVersion: chaos-mesh.org/v1alpha1
 kind: Workflow
 metadata:
-  name: ochacafe-workflow
+  name: network-latency-workflow
   namespace: ochacafe
 spec:
   entry: entry
@@ -34,7 +34,7 @@ spec:
           - name: k6-script
             configMap:
               name: k6-configmap
-    - name: network-latency-1000ms
+    - name: network-latency-100ms
       templateType: NetworkChaos
       deadline: 1m
       networkChaos:
@@ -46,8 +46,8 @@ spec:
         mode: all
         action: delay
         delay:
-          latency: 1000ms
-          jitter: 10ms
+          latency: 100ms
+          jitter: 5ms
           correlation: '100'
         direction: to
     - name: k6-load-test-in-chaos-state
@@ -89,8 +89,21 @@ spec:
             - '{"text": "Experiment has finished. see: http://grafana.shukawam.cf/d/3qwLbhU7k/chaos-dashboard?orgId=1&refresh=5s&from=now-5m&to=now"}'
             - '-H'
             - 'Content-Type: application/json'
+            - '-H'
+            - 'Authorization: Bearer $(WEBHOOK_TOKEN)'
             - >-
-              <webhook-url>
+              $(WEBHOOK_URL)
+          env:
+            - name: WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  key: slack-credential
+                  name: webhook-url
+            - name: WEBHOOK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: slack-credential
+                  name: token
     - name: parralel-task
       templateType: Parallel
       deadline: 2m
