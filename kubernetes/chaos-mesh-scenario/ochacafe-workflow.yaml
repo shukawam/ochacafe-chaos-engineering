@@ -1,0 +1,106 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Workflow
+metadata:
+  name: ochacafe-workflow
+  namespace: ochacafe
+spec:
+  entry: entry
+  templates:
+    - name: entry
+      templateType: Serial
+      deadline: 10m
+      children:
+        - serial-task
+    - name: k6-load-test-in-steady-state
+      templateType: Task
+      task:
+        container:
+          name: k6-load-test
+          image: grafana/k6
+          command:
+            - k6
+            - run
+            - '--out'
+            - 'influxdb=http://influxdb.shukawam.cf/ochacafe'
+            - '--vus'
+            - '10'
+            - '--duration'
+            - '1m'
+            - 'script.js'
+          volumeMounts:
+            - mountPath: /home/k6
+              name: k6-script
+        volumes:
+          - name: k6-script
+            configMap:
+              name: k6-configmap
+    - name: network-latency-1000ms
+      templateType: NetworkChaos
+      deadline: 1m
+      networkChaos:
+        selector:
+          namespaces:
+            - ochacafe
+          labelSelectors:
+            tier: database
+        mode: all
+        action: delay
+        delay:
+          latency: 1000ms
+          jitter: 10ms
+          correlation: '100'
+        direction: to
+    - name: k6-load-test-in-chaos-state
+      templateType: Task
+      task:
+        container:
+          name: k6-load-test
+          image: grafana/k6
+          command:
+            - k6
+            - run
+            - '--out'
+            - 'influxdb=http://influxdb.shukawam.cf/ochacafe'
+            - '--vus'
+            - '10'
+            - '--duration'
+            - '1m'
+            - 'script.js'
+          volumeMounts:
+            - mountPath: /home/k6
+              name: k6-script
+        volumes:
+          - name: k6-script
+            configMap:
+              name: k6-configmap
+    - name: send-slack-message
+      templateType: Task
+      task:
+        container:
+          name: send-slack-message-rendered-http-request
+          image: curlimages/curl:7.78.0
+          command:
+            - curl
+            - '-i'
+            - '-s'
+            - '-X'
+            - POST
+            - '-d'
+            - '{"text": "Experiment has finished. see: http://grafana.shukawam.cf/d/3qwLbhU7k/chaos-dashboard?orgId=1&refresh=5s&from=now-5m&to=now"}'
+            - '-H'
+            - 'Content-Type: application/json'
+            - >-
+              https://hooks.slack.com/services/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
+    - name: parralel-task
+      templateType: Parallel
+      deadline: 2m
+      children:
+        - network-latency-1000ms
+        - k6-load-test-in-chaos-state
+    - name: serial-task
+      templateType: Serial
+      deadline: 5m
+      children:
+        - k6-load-test-in-steady-state
+        - parralel-task
+        - send-slack-message
