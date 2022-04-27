@@ -32,7 +32,6 @@ jobs:
           sleep 10
           kubectl apply -f https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/wordpress/wordpress.yaml
           sleep 10
-          kubectl get po -o name | head -n 1 | xargs kubectl describe
 
       - name: Check pods_1
         id: expected
