@@ -104,7 +104,7 @@ spec:
           - name: k6-script
             configMap:
               name: k6-configmap
-    - name: send-slack-message
+    - name: send-slack-message-finished
       templateType: Task
       task:
         container:
@@ -148,4 +148,4 @@ spec:
         - send-slack-message-started
         - k6-load-test-in-steady-state
         - parralel-task
-        - send-slack-message
+        - send-slack-message-finished
