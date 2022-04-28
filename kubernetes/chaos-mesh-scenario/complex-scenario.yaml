@@ -65,7 +65,7 @@ spec:
           - name: k6-script
             configMap:
               name: k6-configmap
-    - name: network-latency-1000ms
+    - name: network-latency-100ms
       templateType: NetworkChaos
       deadline: 1m
       networkChaos:
@@ -77,7 +77,7 @@ spec:
         mode: all
         action: delay
         delay:
-          latency: 1000ms
+          latency: 100ms
           jitter: 10ms
           correlation: '100'
         direction: to
@@ -154,7 +154,7 @@ spec:
       templateType: Parallel
       deadline: 3m
       children:
-        - network-latency-1000ms
+        - network-latency-100ms
         - packet-loss-30
         - k6-load-test-in-chaos-state
     - name: serial-task
