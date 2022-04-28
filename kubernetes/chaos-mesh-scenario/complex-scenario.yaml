@@ -52,7 +52,7 @@ spec:
             - k6
             - run
             - '--out'
-            - 'influxdb=http://influxdb.shukawam.cf/ochacafe'
+            - 'influxdb=http://influxdb.ochacafe-s5.cf/ochacafe'
             - '--vus'
             - '10'
             - '--duration'
@@ -106,7 +106,7 @@ spec:
             - k6
             - run
             - '--out'
-            - 'influxdb=http://influxdb.shukawam.cf/ochacafe'
+            - 'influxdb=http://influxdb.ochacafe-s5.cf/ochacafe'
             - '--vus'
             - '10'
             - '--duration'
