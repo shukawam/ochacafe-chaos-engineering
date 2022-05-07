@@ -56,7 +56,7 @@ spec:
             - '--vus'
             - '10'
             - '--duration'
-            - '1m'
+            - '30s'
             - 'script.js'
           volumeMounts:
             - mountPath: /home/k6
@@ -95,7 +95,7 @@ spec:
             - '--vus'
             - '10'
             - '--duration'
-            - '1m'
+            - '30s'
             - 'script.js'
           volumeMounts:
             - mountPath: /home/k6
