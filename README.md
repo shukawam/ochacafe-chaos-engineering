@@ -1,45 +1,21 @@
 # ochacafe-chaos-engineering
 
-2022/05/11 に開催された OCHaCafe Season5 - 実験！カオスエンジニアリングで使用したリソースです。
-主に、[Chaos Mesh](https://chaos-mesh.org/) を用いて [WordPress](https://wordpress.com/ja/) へ様々なカオス実験を行います。
+2022/05/11 に開催された [OCHaCafe Season5 - 実験！カオスエンジニアリング](https://ochacafe.connpass.com/event/243297/)で使用したリソースです。
 
 ## overview
 
 ```bash
 .
-├── .github
-│   └── workflows
-│   │   └── chaos-mesh.yaml [GitHub Actions と Chaos Mesh の統合例]
-├── docs
-│   └── install-chaos-mesh.md [OKE への Chaos Mesh のインストール方法]
-├── kubernetes
-│   ├── chaos-mesh [Chaos Mesh 関連の Manifest]
-│   │   ├── chaos-workflow.yaml
-│   │   ├── nw-delay.yaml
-│   │   ├── pod-kill-scheduled.yaml
-│   │   └── pod-kill.yaml
-│   ├── grafana [Grafana 関連の Manifest]
-│   │   ├── grafana-ingress.yaml
-│   │   └── grafana.yaml [Chaos Mesh の DataSource Plugin を含んだ Manifest]
-│   ├── prometheus [Prometheus 関連の Manifest]
-│   │   └── prometheus-ingress.yaml
-│   └── wordpress [WordPress 関連のリソース]
-│       ├── mysql-test-secret.yaml
-│       ├── mysql.yaml
-│       ├── wordpress-ingress.yaml
-│       └── wordpress.yaml
-└── README.md
-```
-
-```bash
 ├── docs
 │   └── install-chaos-mesh.md
 ├── .github
 │   └── workflows
 │       └── chaos-mesh.yaml [GitHub Actions と Chaos Mesh の統合例]
 ├── kubernetes
-│   ├── chaos-mesh-scenario
-│   │   └── pod-kill.yaml [Chaos Mesh 関連の Manifest]
+│   ├── chaos-mesh-scenario [Chaos Mesh 関連の Manifest]
+│   │   ├── complex-scenario.yaml
+│   │   ├── network-latency-workflow.yaml
+│   │   └── pod-kill.yaml
 │   ├── grafana [Grafana 関連の Manifest]
 │   │   ├── grafana-ingress.yaml
 │   │   └── grafana.yaml [Chaos Mesh の DataSource Plugin を含んだ Manifest]

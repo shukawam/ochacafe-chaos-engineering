@@ -14,7 +14,7 @@ spec:
           args:
             - "run"
             - "--out"
-            - "influxdb=http://influxdb.shukawam.cf/ochacafe"
+            - "influxdb=http://influxdb.ochacafe-s5.cf/ochacafe"
             - "--vus"
             - "10"
             - "--duration"
