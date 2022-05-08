@@ -14,8 +14,7 @@
 ├── kubernetes
 │   ├── chaos-mesh-scenario [Chaos Mesh 関連の Manifest]
 │   │   ├── complex-scenario.yaml
-│   │   ├── network-latency-workflow.yaml
-│   │   └── pod-kill.yaml
+│   │   └── network-latency-workflow.yaml
 │   ├── grafana [Grafana 関連の Manifest]
 │   │   ├── grafana-ingress.yaml
 │   │   └── grafana.yaml [Chaos Mesh の DataSource Plugin を含んだ Manifest]
