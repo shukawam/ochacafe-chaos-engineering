@@ -11,10 +11,42 @@
 ├── .github
 │   └── workflows
 │       └── chaos-mesh.yaml [GitHub Actions と Chaos Mesh の統合例]
+├── k8s-helidon-app [Sample Java Application(for JVMChaos)]
+│   ├── build_spec.yaml
+│   ├── Dockerfile
+│   ├── Dockerfile.jlink
+│   ├── Dockerfile.native
+│   ├── kubernetes
+│   │   ├── app.yaml
+│   │   ├── ingress.yaml
+│   │   └── ns-config.yaml
+│   ├── pom.xml
+│   ├── README.md
+│   └── src
+│       ├── main
+│       │   ├── java
+│       │   │   └── me
+│       │   │       └── shukawam
+│       │   │           ├── GreetingProvider.java
+│       │   │           ├── GreetResource.java
+│       │   │           ├── NamespaceProvider.java
+│       │   │           ├── NamespaceResource.java
+│       │   │           └── package-info.java
+│       │   └── resources
+│       │       ├── application.yaml
+│       │       ├── logging.properties
+│       │       └── META-INF
+│       │           ├── beans.xml
+│       │           ├── microprofile-config.properties
+│       │           └── native-image
+│       │               └── reflect-config.json
+│       └── test
+│           └── java
+│              └── me
+│                  └── shukawam
+│                       └── MainTest.java
 ├── kubernetes
-│   ├── chaos-mesh-scenario [Chaos Mesh 関連の Manifest]
-│   │   ├── complex-scenario.yaml
-│   │   └── network-latency-workflow.yaml
+│   ├── chaos-mesh-examples [Chaos Mesh 関連の Manifest]
 │   ├── grafana [Grafana 関連の Manifest]
 │   │   ├── grafana-ingress.yaml
 │   │   └── grafana.yaml [Chaos Mesh の DataSource Plugin を含んだ Manifest]
