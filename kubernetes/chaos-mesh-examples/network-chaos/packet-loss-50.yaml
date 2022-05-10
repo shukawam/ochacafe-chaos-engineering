@@ -1,0 +1,18 @@
+kind: NetworkChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: k8s-helidon-app
+  name: packet-loss-50
+spec:
+  selector:
+    namespaces:
+      - k8s-helidon-app
+    labelSelectors:
+      app: k8s-helidon-app
+  mode: all
+  action: loss
+  duration: 2m
+  loss:
+    loss: "50"
+    correlation: "0"
+  direction: to

@@ -1,0 +1,21 @@
+kind: JVMChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: k8s-helidon-app
+  name: jvm-heap-stress
+spec:
+  selector:
+    namespaces:
+      - k8s-helidon-app
+    labelSelectors:
+      app: k8s-helidon-app
+  mode: all
+  duration: 2m
+  action: stress
+  port: 9277
+  memType: heap
+  name: "--stress-1652167582"
+  value: ""
+  exception: ""
+  latency: 0
+  ruleData: ""

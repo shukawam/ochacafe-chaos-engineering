@@ -1,0 +1,18 @@
+kind: HTTPChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: istio-system
+  name: http-request-delay-1s-istio-ingress-gateway
+spec:
+  selector:
+    namespaces:
+      - istio-system
+    labelSelectors:
+      app: istio-ingressgateway
+  mode: all
+  target: Request
+  delay: 1s
+  port: 80
+  path: http://helidon.ochacafe-s5.cf/health
+  method: GET
+  duration: 2m

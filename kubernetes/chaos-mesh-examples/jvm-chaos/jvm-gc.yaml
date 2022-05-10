@@ -1,0 +1,20 @@
+kind: JVMChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: k8s-helidon-app
+  name: jvm-gc
+spec:
+  selector:
+    namespaces:
+      - k8s-helidon-app
+    labelSelectors:
+      app: k8s-helidon-app
+  mode: one
+  duration: 2m
+  action: gc
+  port: 9277
+  name: "--gc-1652171077"
+  value: ""
+  exception: ""
+  latency: 0
+  ruleData: ""

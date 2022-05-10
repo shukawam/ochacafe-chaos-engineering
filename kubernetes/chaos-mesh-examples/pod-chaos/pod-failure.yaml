@@ -1,0 +1,15 @@
+kind: PodChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: k8s-helidon-app
+  name: pod-failure
+spec:
+  selector:
+    namespaces:
+      - k8s-helidon-app
+    labelSelectors:
+      app: k8s-helidon-app
+  mode: one
+  action: pod-failure
+  duration: 2m
+  gracePeriod: 0

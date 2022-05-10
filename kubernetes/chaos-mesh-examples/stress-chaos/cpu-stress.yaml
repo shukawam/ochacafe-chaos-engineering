@@ -1,0 +1,17 @@
+kind: StressChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: k8s-helidon-app
+  name: cpu-stress
+spec:
+  selector:
+    namespaces:
+      - k8s-helidon-app
+    labelSelectors:
+      app: k8s-helidon-app
+  mode: one
+  stressors:
+    cpu:
+      workers: 4
+      load: 2
+  duration: 1m
