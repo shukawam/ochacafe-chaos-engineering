@@ -8,40 +8,18 @@ spec:
   templates:
     - name: entry
       templateType: Serial
-      deadline: 10m
+      deadline: 3m
       children:
-        - serial-task
-    - name: send-slack-message-started
-      templateType: Task
-      task:
-        container:
-          name: send-slack-message-rendered-http-request
-          image: curlimages/curl:7.78.0
-          command:
-            - curl
-            - '-i'
-            - '-s'
-            - '-X'
-            - POST
-            - '-d'
-            - '{"text": "Experiment has started. see: http://grafana.ochacafe-s5.cf/d/xq9XXlw7k/chaos-mesh-dashboard?orgId=1&refresh=5s&from=now-5m&to=now"}'
-            - '-H'
-            - 'Content-Type: application/json'
-            - '-H'
-            - 'Authorization: Bearer $(WEBHOOK_TOKEN)'
-            - >-
-              $(WEBHOOK_URL)
-          env:
-            - name: WEBHOOK_URL
-              valueFrom:
-                secretKeyRef:
-                  key: webhook-url
-                  name: slack-credential
-            - name: WEBHOOK_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  key: token
-                  name: slack-credential
+        - k6-load-test-in-steady-state
+        - event-injection
+        - send-slack-message
+    - name: event-injection
+      templateType: Parallel
+      deadline: 3m
+      children:
+        - network-latency-100ms
+        - packet-loss-30
+        - k6-load-test-in-chaos-state
     - name: k6-load-test-in-steady-state
       templateType: Task
       task:
@@ -51,13 +29,13 @@ spec:
           command:
             - k6
             - run
-            - '--out'
-            - 'influxdb=http://influxdb.ochacafe-s5.cf/ochacafe'
-            - '--vus'
-            - '10'
-            - '--duration'
-            - '1m'
-            - 'script.js'
+            - "--out"
+            - "influxdb=http://influxdb.ochacafe-s5.cf/ochacafe"
+            - "--vus"
+            - "10"
+            - "--duration"
+            - "1m"
+            - "script.js"
           volumeMounts:
             - mountPath: /home/k6
               name: k6-script
@@ -79,7 +57,7 @@ spec:
         delay:
           latency: 100ms
           jitter: 10ms
-          correlation: '100'
+          correlation: "100"
         direction: to
     - name: packet-loss-30
       templateType: NetworkChaos
@@ -93,8 +71,8 @@ spec:
         mode: all
         action: loss
         loss:
-          loss: '30'
-          correlation: '0'
+          loss: "30"
+          correlation: "0"
         direction: to
     - name: k6-load-test-in-chaos-state
       templateType: Task
@@ -105,13 +83,13 @@ spec:
           command:
             - k6
             - run
-            - '--out'
-            - 'influxdb=http://influxdb.ochacafe-s5.cf/ochacafe'
-            - '--vus'
-            - '10'
-            - '--duration'
-            - '1m'
-            - 'script.js'
+            - "--out"
+            - "influxdb=http://influxdb.ochacafe-s5.cf/ochacafe"
+            - "--vus"
+            - "10"
+            - "--duration"
+            - "1m"
+            - "script.js"
           volumeMounts:
             - mountPath: /home/k6
               name: k6-script
@@ -119,7 +97,7 @@ spec:
           - name: k6-script
             configMap:
               name: k6-configmap
-    - name: send-slack-message-finished
+    - name: send-slack-message
       templateType: Task
       task:
         container:
@@ -127,16 +105,16 @@ spec:
           image: curlimages/curl:7.78.0
           command:
             - curl
-            - '-i'
-            - '-s'
-            - '-X'
+            - "-i"
+            - "-s"
+            - "-X"
             - POST
-            - '-d'
+            - "-d"
             - '{"text": "Experiment has finished. see: http://grafana.ochacafe-s5.cf/d/xq9XXlw7k/chaos-mesh-dashboard?orgId=1&refresh=5s&from=now-5m&to=now"}'
-            - '-H'
-            - 'Content-Type: application/json'
-            - '-H'
-            - 'Authorization: Bearer $(WEBHOOK_TOKEN)'
+            - "-H"
+            - "Content-Type: application/json"
+            - "-H"
+            - "Authorization: Bearer $(WEBHOOK_TOKEN)"
             - >-
               $(WEBHOOK_URL)
           env:
@@ -150,18 +128,3 @@ spec:
                 secretKeyRef:
                   key: token
                   name: slack-credential
-    - name: parralel-task
-      templateType: Parallel
-      deadline: 3m
-      children:
-        - network-latency-100ms
-        - packet-loss-30
-        - k6-load-test-in-chaos-state
-    - name: serial-task
-      templateType: Serial
-      deadline: 5m
-      children:
-        - send-slack-message-started
-        - k6-load-test-in-steady-state
-        - parralel-task
-        - send-slack-message-finished
