@@ -48,7 +48,7 @@ jobs:
         uses: shukawam/chaos-mesh-action@main
         env:
           CFG_FILE: https://raw.githubusercontent.com/shukawam/ochacafe-chaos-engineering/main/kubernetes/github-integration/pod-kill.yaml
-          CHAOS_MESH_VERSION: v2.1.5
+          CHAOS_MESH_VERSION: v2.2.0
 
       - name: Check pods_2
         id: actual
