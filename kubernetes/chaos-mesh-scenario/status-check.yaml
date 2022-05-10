@@ -1,0 +1,38 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Workflow
+metadata:
+  name: status-check-workflow
+  namespace: ochacafe
+spec:
+  entry: entry
+  templates:
+    - name: entry
+      templateType: Serial
+      deadline: 1m
+      children:
+        - pod-kill
+        - status-check
+    - name: status-check
+      templateType: StatusCheck
+      deadline: 20s
+      statusCheck:
+        mode: Continuous
+        type: HTTP
+        http:
+          url: http://wordpress.ochacafe-s5.cf
+          method: GET
+          criteria:
+            statusCode: "200"
+    - name: pod-kill
+      templateType: PodChaos
+      deadline: 20s
+      podChaos:
+        selector:
+          namespaces:
+            - ochacafe
+          labelSelectors:
+            app: wordpress
+            tier: frontend
+        mode: one
+        action: pod-kill
+        gracePeriod: 0
