@@ -26,7 +26,7 @@ spec:
             - "-X"
             - POST
             - "-d"
-            - '{"text": "Experiment has finished. see: http://grafana.ochacafe-s5.cf/d/xq9XXlw7k/chaos-mesh-dashboard?orgId=1&refresh=5s&from=now-5m&to=now"}'
+            - '{"text": "Experiment has started. see: http://grafana.ochacafe-s5.cf/d/xq9XXlw7k/chaos-mesh-dashboard?orgId=1&refresh=5s&from=now-5m&to=now"}'
             - "-H"
             - "Content-Type: application/json"
             - "-H"
