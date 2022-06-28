@@ -1,3 +1,0 @@
-[submodule "k8s-helidon-app"]
-	path = k8s-helidon-app
-	url = https://github.com/shukawam/k8s-helidon-app
